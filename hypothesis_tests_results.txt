@@ -1,0 +1,132 @@
+==============================================================================
+HYPOTHESIS TESTING RESULTS
+Statistical Business Analysis - Sales Dataset
+Dataset: sales_data.csv (n = 2,000 orders)
+Significance level (alpha): 0.05
+==============================================================================
+
+------------------------------------------------------------------------------
+TEST 1: One-Way ANOVA - Revenue across Sales Channels
+------------------------------------------------------------------------------
+H0: Mean revenue is equal across all sales channels (Mobile App, Online, In-Store)
+H1: At least one channel's mean revenue differs from the others
+
+Group statistics:
+  Mobile App     n=  379   mean=$    808.71   std=$    993.21
+  Online         n= 1012   mean=$    778.99   std=$   1010.95
+  In-Store       n=  609   mean=$    744.73   std=$    965.44
+
+F-statistic        = 0.5079
+p-value             = 0.601852
+Levene's test p     = 0.4911  (homogeneity of variance: satisfied)
+Eta-squared (effect size) = 0.0005
+
+DECISION: FAIL TO REJECT H0 (p >= 0.05)
+CONCLUSION: No statistically significant difference in mean revenue across sales
+channels. Channel explains virtually none of the variance in order revenue (eta-sq ~ 0).
+
+------------------------------------------------------------------------------
+TEST 2: One-Way ANOVA - Revenue across Product Categories
+------------------------------------------------------------------------------
+H0: Mean revenue is equal across all 5 product categories
+H1: At least one category's mean revenue differs from the others
+
+Group statistics:
+  Home & Garden  n=  407   mean=$    790.93   std=$    586.12
+  Sports         n=  294   mean=$    419.98   std=$    336.73
+  Electronics    n=  512   mean=$   1788.73   std=$   1381.94
+  Books          n=  290   mean=$     90.50   std=$     67.60
+  Clothing       n=  497   mean=$    323.78   std=$    218.04
+
+F-statistic        = 340.1736
+p-value             = 2.152992e-223
+Eta-squared (effect size) = 0.4055
+
+DECISION: REJECT H0 (p < 0.05)
+CONCLUSION: Product category has a highly significant effect on revenue, explaining
+~40.6% of total revenue variance. Electronics drives substantially higher order
+values than every other category.
+
+Tukey HSD post-hoc pairwise comparisons:
+           Multiple Comparison of Means - Tukey HSD, FWER=0.05            
+==========================================================================
+    group1        group2     meandiff  p-adj    lower      upper    reject
+--------------------------------------------------------------------------
+        Books      Clothing    233.272 0.0004    78.5388   388.0052   True
+        Books   Electronics  1698.2261    0.0  1544.3304  1852.1219   True
+        Books Home & Garden   700.4213    0.0   539.5074   861.3351   True
+        Books        Sports   329.4803    0.0   156.1769   502.7837   True
+     Clothing   Electronics  1464.9541    0.0  1333.0964  1596.8119   True
+     Clothing Home & Garden   467.1493    0.0   327.1641   607.1345   True
+     Clothing        Sports    96.2083 0.4311   -57.8587   250.2753  False
+  Electronics Home & Garden  -997.8049    0.0 -1136.8638  -858.7459   True
+  Electronics        Sports -1368.7459    0.0 -1521.9718 -1215.5199   True
+Home & Garden        Sports   -370.941    0.0  -531.2144  -210.6676   True
+--------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+TEST 3: Independent Samples t-test (Welch's) - Online vs In-Store Revenue
+------------------------------------------------------------------------------
+H0: Mean revenue (Online) = Mean revenue (In-Store)
+H1: Mean revenue (Online) != Mean revenue (In-Store)
+
+  Online:    n= 1012   mean=$    778.99   std=$   1010.95
+  In-Store:  n=  609   mean=$    744.73   std=$    965.44
+
+Welch's t-statistic = 0.6796
+p-value              = 0.496852
+Cohen's d (effect size) = 0.0345
+
+DECISION: FAIL TO REJECT H0 (p >= 0.05)
+CONCLUSION: No significant difference between Online and In-Store mean revenue;
+effect size is negligible (d ~ 0.03).
+
+------------------------------------------------------------------------------
+TEST 4: One-Sample t-test - Mean Revenue vs Business Benchmark ($500)
+------------------------------------------------------------------------------
+H0: Population mean revenue = $500
+H1: Population mean revenue != $500
+
+  Sample mean = $774.19, n = 2000
+
+t-statistic = 12.3399
+p-value      = 9.059573e-34
+
+DECISION: REJECT H0 (p < 0.05)
+CONCLUSION: Average order revenue ($774.19) is statistically significantly higher
+than the $500 benchmark.
+
+------------------------------------------------------------------------------
+TEST 5: Chi-Square Test of Independence - Customer Segment vs Sales Channel
+------------------------------------------------------------------------------
+H0: Customer Segment and Sales Channel are independent
+H1: Customer Segment and Sales Channel are associated
+
+Contingency table (observed counts):
+Channel          In-Store  Mobile App  Online
+CustomerSegment                              
+New                   250         152     402
+Returning             264         170     455
+VIP                    95          57     155
+
+Chi-square statistic = 0.4561
+Degrees of freedom    = 4
+p-value               = 0.977632
+Cramer's V (effect size) = 0.0107
+
+DECISION: FAIL TO REJECT H0 (p >= 0.05)
+CONCLUSION: Customer segment and channel choice are independent. VIP, Returning,
+and New customers use sales channels in similar proportions.
+
+==============================================================================
+SUMMARY TABLE
+==============================================================================
+#  Test                                                        p-value      Decision
+------------------------------------------------------------------------------
+1  ANOVA: Revenue ~ Channel                                     0.6019Fail to reject
+2  ANOVA: Revenue ~ Category                                 2.15e-223        REJECT
+3  t-test: Online vs In-Store Revenue                           0.4969Fail to reject
+4  One-sample t-test: Revenue vs $500                         9.06e-34        REJECT
+5  Chi-square: Segment vs Channel                               0.9776Fail to reject
+
+Generated by statistical_analysis.ipynb
